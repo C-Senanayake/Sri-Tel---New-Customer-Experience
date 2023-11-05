@@ -3,10 +3,22 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const twilio = require("twilio");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 const PORT = 3004;
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+const corsOptions = {
+  origin: "http://localhost:8080",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Initialize NodeMailer transporter
 const transporter = nodemailer.createTransport({
