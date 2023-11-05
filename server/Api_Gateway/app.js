@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const axios = require('axios');
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const axios = require("axios");
 const app = express();
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
@@ -11,7 +11,7 @@ const PORT = 8080;
 
 app.use(express.json());
 
-const SECRET_KEY = 'middleware'; 
+const SECRET_KEY = "middleware";
 
 const SERVICES = {
   account: 'http://localhost:3001',
@@ -22,14 +22,14 @@ const SERVICES = {
 };
 
 app.use(cookieParser());
-app.use(bodyParser.json({limit:'30mb',extended:true}));
-app.use(bodyParser.urlencoded({limit:'30mb',extended:true}));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 const corsOptions = {
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  };
+  origin: "http://localhost:3000",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
 
 app.use(cors(corsOptions));
 
@@ -37,14 +37,14 @@ app.use(cors(corsOptions));
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: "Unauthorized" });
   }
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     req.userId = decoded.userId; // Add the userId to the request object for further processing
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid token' });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
@@ -56,11 +56,10 @@ const verifyToken = (req, res, next) => {
 
 //Server Routes
 
-
 //1.account creation routes
 
 // User registration
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   console.log("register");
   console.log(req.body);
   try {
@@ -125,7 +124,7 @@ app.post('/otp', async (req, res) => {
 });
 
 // User login
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   console.log("login");
   console.log(req.body);
   try {
@@ -137,7 +136,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Account recovery
-app.post('/recover', async (req, res) => {
+app.post("/recover", async (req, res) => {
   try {
     const response = await axios.post(`${SERVICES.account}/recover`, req.body);
     res.json(response.data);
@@ -160,9 +159,12 @@ app.get('/services/:id', async (req, res) => {
 });
 
 // Activate a telco service
-app.post('/activate-service', async (req, res) => {
+app.post("/activate-service", async (req, res) => {
   try {
-    const response = await axios.post(`${SERVICES.serviceManagement}/activate-service`, req.body);
+    const response = await axios.post(
+      `${SERVICES.serviceManagement}/activate-service`,
+      req.body
+    );
     res.json(response.data);
   } catch (error) {
     res.status(error).json({ message: error });
@@ -170,18 +172,20 @@ app.post('/activate-service', async (req, res) => {
 });
 
 // Deactivate a telco service
-app.post('/deactivate-service', async (req, res) => {
+app.post("/deactivate-service", async (req, res) => {
   try {
-    const response = await axios.post(`${SERVICES.serviceManagement}/deactivate-service`, req.body);
+    const response = await axios.post(
+      `${SERVICES.serviceManagement}/deactivate-service`,
+      req.body
+    );
     res.json(response.data);
   } catch (error) {
     res.status(error).json({ message: error });
   }
 });
 
-
 // View current and past bills
-app.get('/bills/:userId', async (req, res) => {
+app.get("/bills/:userId", async (req, res) => {
   const userId = req.params.userId;
   try {
     const response = await axios.get(`${SERVICES.billing}/bills/${userId}`);
@@ -192,7 +196,7 @@ app.get('/bills/:userId', async (req, res) => {
 });
 
 // Pay a bill online
-app.post('/pay-bill', async (req, res) => {
+app.post("/pay-bill", async (req, res) => {
   try {
     const response = await axios.post(`${SERVICES.billing}/pay-bill`, req.body);
     res.json(response.data);
@@ -202,9 +206,14 @@ app.post('/pay-bill', async (req, res) => {
 });
 
 // Receive and handle notifications (email/SMS/Push)
-app.post('/notifications', async (req, res) => {
+app.post("/notifications", async (req, res) => {
+  console.log("notifications in api gateway");
+
   try {
-    const response = await axios.post(`${SERVICES.notification}/notifications`, req.body);
+    const response = await axios.post(
+      `${SERVICES.notification}/notifications`,
+      req.body
+    );
     res.json(response.data);
   } catch (error) {
     res.status(error).json({ message: error });
@@ -212,7 +221,7 @@ app.post('/notifications', async (req, res) => {
 });
 
 // Chat with customer care agents
-app.post('/chat', async (req, res) => {
+app.post("/chat", async (req, res) => {
   try {
     const response = await axios.post(`${SERVICES.chat}/chat`, req.body);
     res.json(response.data);
