@@ -91,7 +91,7 @@ app.post('/phone', async (req, res) => {
   const to = telephone;
 
   const baseurl ="http://www.textit.biz/sendmsg";
-  const url = `${baseurl}/?id=${user}&pw=${password}&to=${to}&text=This is your OTP to verify your phone number: ${otp}`;
+  const url = `${baseurl}/?id=${user}&pw=${password}&to=${to}&text=This is your OTP to verify your phone number in SriCare: ${otp}`;
   const response = await axios.get(url);
   // const ret = file(url);
 console.log("URL::::",response);

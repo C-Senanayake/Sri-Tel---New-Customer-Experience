@@ -20,7 +20,7 @@ const sendEmail = async (name, email) => {
               <h3>Hi ${name},</h3>  
               <p>Thank you for registering with us.</p>
               <p>Click on the button below to get started!</p>
-            <a href="http:localhost:8080/activate_email/${email}"><button>Click here</button></a>`,
+            <a href="http://localhost:8080/activate_email/${email}"><button>Click here</button></a>`,
     });
 
     console.log("Email sent successfully!");
