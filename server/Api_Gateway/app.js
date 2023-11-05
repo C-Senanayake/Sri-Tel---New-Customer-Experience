@@ -18,7 +18,7 @@ const SERVICES = {
   billing: "http://localhost:3003",
   notification: "http://localhost:3004",
   chat: "http://localhost:3005",
-  payment: "http://localhost:3006",
+  checkout: "http://localhost:3006",
 };
 
 app.use(cookieParser());
@@ -204,11 +204,11 @@ app.post("/chat", async (req, res) => {
 });
 
 // payment services
-app.post("/payment", async (req, res) => {
-  console.log("payment");
+app.post("/checkout", async (req, res) => {
+  console.log("checkout");
   console.log(req.body);
   try {
-    const response = await axios.post(`${SERVICES.payment}/payment`, req.body);
+    const response = await axios.post(`${SERVICES.payment}/checkout`, req.body);
     res.json(response.data);
   } catch (error) {
     res
