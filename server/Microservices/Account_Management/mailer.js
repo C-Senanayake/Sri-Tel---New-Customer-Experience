@@ -16,7 +16,8 @@ const sendEmail = async (name, email) => {
       from: `"Sri Care" <fitzenhighoctane@gmail.com>`,
       to: "adheesha.1999@gmail.com",
       subject: "Welcome to Sri Care!",
-      html: "<h1>Welcome to Sri Care!</h1>",
+      html: `<h1>Welcome to Sri Care!</h1>
+            <a href="https://www.google.com"><button>Click here</button></a>`,
     });
 
     console.log("Email sent successfully!");
