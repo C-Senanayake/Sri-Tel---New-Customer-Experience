@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const stripe = require("stripe")(
+  "sk_test_51O6IFtDKeY8vYVQ9IhQa5ss2hVqAfjTfQvYmtVuuD6WjRUg7tGv7DFF4Psl6cQwUYrbbwlNbyIUyrkNlr57xhxCZ00rGHtLjfQ"
+);
 const app = express();
 const PORT = 3006;
 
@@ -23,9 +26,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // checkout
-app.post("/login", async (req, res) => {
-  //   console.log("login2");
-  //   console.log(req.body);
+app.post("/checkout", async (req, res) => {
   //   const { email, pass } = req.body;
   //   const user = await User.findOne({ email: email });
   //   console.log("USER:::", user);
@@ -50,6 +51,38 @@ app.post("/login", async (req, res) => {
   //   } else {
   //     next(createError(400, "User not found"));
   //   }
+
+  console.log("checkout");
+  //console.log(req.body);
+
+  const item = [
+    {
+      price_data: {
+        currency: "lkr",
+        product_data: {
+          name: "Sri Care",
+          description: `Test`,
+        },
+        unit_amount: 200 * 100, // by default, amount is in cents
+      },
+      quantity: 1,
+    },
+  ];
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: item,
+    mode: "payment",
+    success_url: `payment/success`, // direct when payment is successful
+    cancel_url: `payment/unsuccess`, // direct when payment is cancelled / failed
+  });
+
+  if (session.url === undefined) {
+    throw new Error("Something went wrong!");
+  }
+
+  res.status(200).json({
+    url: session.url,
+  });
 });
 
 mongoose
