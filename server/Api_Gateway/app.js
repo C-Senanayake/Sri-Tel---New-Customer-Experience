@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require("mongoose");
 const axios = require('axios');
 const app = express();
 const jwt = require('jsonwebtoken');
@@ -149,6 +150,6 @@ app.post('/chat', async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`API Gateway is running on port ${PORT}`);
-});
+mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+.then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
+.catch((error)=>{console.log(error.message)})

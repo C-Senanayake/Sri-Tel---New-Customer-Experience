@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
+const mongoose = require("mongoose");
 const app = express();
 const PORT = 3004;
 
@@ -51,6 +52,6 @@ app.post('/send-notification', (req, res) => {
   res.json({ message: 'Notification sent successfully.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Notification Service is running on port ${PORT}`);
-});
+mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+.then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
+.catch((error)=>{console.log(error.message)})

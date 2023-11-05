@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
 const app = express();
 const PORT = 3003;
 
@@ -92,6 +93,6 @@ app.post('/deactivate-service', (req, res) => {
   res.json({ message: 'Service deactivated successfully for the current month.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Service Management Microservice is running on port ${PORT}`);
-});
+mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+.then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
+.catch((error)=>{console.log(error.message)})

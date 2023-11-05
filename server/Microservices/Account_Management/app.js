@@ -1,7 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
 const app = express();
-
+const PORT = 3001;
 
 const SECRET_KEY = 'middleware';
 
@@ -57,6 +58,6 @@ app.post('/recover', (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log('Authentication Service is running on port 3001');
-});
+mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+.then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
+.catch((error)=>{console.log(error.message)})
