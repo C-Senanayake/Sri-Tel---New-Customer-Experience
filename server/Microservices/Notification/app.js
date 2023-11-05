@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 // ); // Replace with your Twilio credentials
 
 // Endpoint to send notifications via email and SMS
-app.post("/send-notification", (req, res) => {
+app.post("/notification", (req, res) => {
   console.log("notifications in service");
   // const { customerId, message, contactInfo } = req.body;
 
@@ -63,7 +63,7 @@ mongoose
   )
   .then(() =>
     app.listen(PORT, () => {
-      console.log("API Gateway is running on port " + PORT);
+      console.log("Notification service is running on port " + PORT);
     })
   )
   .catch((error) => {

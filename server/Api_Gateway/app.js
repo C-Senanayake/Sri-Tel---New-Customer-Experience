@@ -179,7 +179,7 @@ app.post("/notifications", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `${SERVICES.notification}/send-notifications`,
+      `${SERVICES.notification}/notifications`,
       req.body
     );
     res.json(response.data);
