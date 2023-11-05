@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const sendEmail = require("./mailer.js");
 const app = express();
 const PORT = 3001;
 
@@ -54,6 +55,10 @@ app.post("/register", async (req, res) => {
         email,
         password: bcrypt.hashSync(password, bcryptSalt),
       });
+
+      // send email
+      //await sendEmail(userName, email);
+
       res.status(201).json({ message: "User created", user });
     } catch (error) {
       next(error);
