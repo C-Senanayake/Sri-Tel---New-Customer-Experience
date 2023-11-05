@@ -12,8 +12,8 @@ app.use(bodyParser.json());
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "", // Replace with your email address
-    pass: "", // Replace with your email password
+    user: "fitzenhighoctane@gmail.com", // Replace with your email address
+    pass: "hpgyeefmxpdyvsmn", // Replace with your email password
   },
 });
 
@@ -25,11 +25,12 @@ const transporter = nodemailer.createTransport({
 
 // Endpoint to send notifications via email and SMS
 app.post("/send-notification", (req, res) => {
+  console.log("notifications in service");
   // const { customerId, message, contactInfo } = req.body;
 
   // Send email notification using NodeMailer
   const mailOptions = {
-    from: "", // Replace with your email address
+    from: "fitzenhighoctane@gmail.com", // Replace with your email address
     to: "adheesha.1999@gmail.com",
     subject: "Sri-Care Notification Subject",
     text: "Sri-Care Notification Body",
