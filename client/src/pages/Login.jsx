@@ -69,11 +69,9 @@ function Login(){
             //         break;
             // }
         }catch(error){
-            console.log("error:"+error.response.data.detail);
-            if(error.response && error.response.status >=400 && error.response.status <=500){
-                console.log(error.response.data.detail);
-                setError(error.response.data.detail);
-            }
+            console.log("error:"+error.response.data.message);
+                setError(error.response.data.message);
+            
         }
     }
 

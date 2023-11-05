@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const Service = require('./models/Service');
 const User = require('./models/User.js');
+const sendEmail = require('./mailer.js');
 const app = express();
 const PORT = 3003;
 
@@ -45,7 +46,8 @@ app.post('/activate-service', async (req, res) => { // Added 'async' keyword her
       const updatedUser = await User.findByIdAndUpdate(
         customerId,
         {$push:{activePackages: service}});
-
+        console.log("updatedUser:::",updatedUser);
+        await sendEmail(service, updatedUser.email);
         const user = User.findById(customerId);
         res.status(200).json({messgae:"Package activated successfully",updatedUser});
     } catch (error) {

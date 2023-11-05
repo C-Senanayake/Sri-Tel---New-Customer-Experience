@@ -71,6 +71,14 @@ app.post('/register', async (req, res) => {
   }
 });
 
+app.get('/activate_email/:email', async (req, res) => {
+  console.log("activate_email");
+  console.log(req.params.email);
+  const email = req.params.email;
+  const user = await User.findOneAndUpdate({email:email},{email_active:true});
+  res.redirect('http://localhost:3000/');
+});
+
 app.post('/phone', async (req, res) => {
   console.log("phone");
   console.log(req.body);
@@ -128,11 +136,20 @@ app.post('/otp', async (req, res) => {
 app.post('/login', async (req, res) => {
   console.log("login");
   console.log(req.body);
-  try {
-    const response = await axios.post(`${SERVICES.account}/login`, req.body);
-    res.json(response.data);
-  } catch (error) {
-    res.status(error).json({ message: error });
+  const {email,pass} = req.body;
+  const user = await User.findOne({email:email});
+  console.log("USER:::",user);
+  if(user){
+    if(user.email_active!=true){
+      res.status(400).json({message:"Email not verified"});
+    }else{
+      try {
+        const response = await axios.post(`${SERVICES.account}/login`, req.body);
+        res.json(response.data);
+      } catch (error) {
+        res.status(error).json({ message: error });
+      }
+    }
   }
 });
 
