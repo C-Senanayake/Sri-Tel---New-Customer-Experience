@@ -54,7 +54,7 @@ app.use(
     "/deactivate-service",
     "/bills/:userId",
     "/pay-bill",
-    // "/notifications",
+    "/notifications",
     "/chat",
   ],
   verifyToken
@@ -175,9 +175,11 @@ app.post("/pay-bill", async (req, res) => {
 
 // Receive and handle notifications (email/SMS/Push)
 app.post("/notifications", async (req, res) => {
+  console.log("notifications in api gateway");
+
   try {
     const response = await axios.post(
-      `${SERVICES.notification}/notifications`,
+      `${SERVICES.notification}/send-notifications`,
       req.body
     );
     res.json(response.data);
