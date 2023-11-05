@@ -57,7 +57,7 @@ app.post("/register", async (req, res) => {
       });
 
       // send email
-      //await sendEmail(userName, email);
+      await sendEmail(userName, email);
 
       res.status(201).json({ message: "User created", user });
     } catch (error) {
