@@ -54,7 +54,7 @@ app.use(
     "/deactivate-service",
     "/bills/:userId",
     "/pay-bill",
-    "/notifications",
+    // "/notifications",
     "/chat",
   ],
   verifyToken
