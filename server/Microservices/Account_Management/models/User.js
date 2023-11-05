@@ -1,25 +1,47 @@
 const mongoose = require('mongoose');
 
+const ServiceSchema = new mongoose.Schema({
+    serviceName: {
+        type: String,
+    },
+    includes: {
+        type: String,
+    },
+    price: {
+        type: String,
+    }
+});
+
 const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: true,
-        unique: true,
     },
     email: {
         type: String,
         required: true,
-        unique: true,
     },
     telephone: {
         type: String,
-        unique: true,
+        default: null,
     },
     password: {
         type: String,
         // required: true,
     },
+    otp:{
+        type: String,
+        default: null,
+    },
+    activePackages: {
+        type: [ServiceSchema] ,
+        default: [],
+    },
     email_active: {
+        type: Boolean,
+        default: false,
+    },
+phone_active: {
         type: Boolean,
         default: false,
     },

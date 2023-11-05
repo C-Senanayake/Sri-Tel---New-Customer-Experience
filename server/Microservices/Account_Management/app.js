@@ -53,9 +53,10 @@ app.post('/register', async (req, res) => {
             email,
             password: bcrypt.hashSync(password, bcryptSalt)
         })
+        console.log("USER:::",user);
         res.status(201).json({message:"User created", user});
     } catch (error) {
-        next(error);
+        console.log(error);
     }
 }
   // res.status(201).json({ message: 'User registered successfully' });

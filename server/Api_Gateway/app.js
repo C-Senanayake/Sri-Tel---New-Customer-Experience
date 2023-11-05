@@ -6,6 +6,7 @@ const cors = require('cors');
 const axios = require('axios');
 const app = express();
 const jwt = require('jsonwebtoken');
+const User = require('./models/User');
 const PORT = 8080;
 
 app.use(express.json());
@@ -14,8 +15,8 @@ const SECRET_KEY = 'middleware';
 
 const SERVICES = {
   account: 'http://localhost:3001',
-  serviceManagement: 'http://localhost:3002', 
-  billing: 'http://localhost:3003', 
+  billing: 'http://localhost:3002', 
+  serviceManagement: 'http://localhost:3003', 
   notification: 'http://localhost:3004', 
   chat: 'http://localhost:3005', 
 };
@@ -48,7 +49,7 @@ const verifyToken = (req, res, next) => {
 };
 
 // Apply token verification middleware to specific routes
-app.use(['/activate-service', '/deactivate-service', '/bills/:userId', '/pay-bill', '/notifications', '/chat'], verifyToken);
+// app.use(['/activate-service', '/deactivate-service', '/bills/:userId', '/pay-bill', '/notifications', '/chat'], verifyToken);
 
 
 
@@ -64,9 +65,62 @@ app.post('/register', async (req, res) => {
   console.log(req.body);
   try {
     const response = await axios.post(`${SERVICES.account}/register`, req.body);
-    // res.json(response.data);
+    res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
+  }
+});
+
+app.post('/phone', async (req, res) => {
+  console.log("phone");
+  console.log(req.body);
+  const {telephone,userId} = req.body;
+  console.log(userId);
+  const otp = Math.floor(100000 + Math.random() * 900000)
+  const user = "94722699883";
+  const password = "7884";
+  // const text = urlencode(`This is your OTP to verify your phone number: ${otp}`);
+  const to = telephone;
+
+  const baseurl ="http://www.textit.biz/sendmsg";
+  const url = `${baseurl}/?id=${user}&pw=${password}&to=${to}&text=This is your OTP to verify your phone number: ${otp}`;
+  const response = await axios.get(url);
+  // const ret = file(url);
+console.log("URL::::",response);
+  const resp= response.data.split(":");
+  console.log(resp[0]);
+  if(resp[0]=="OK")
+  {
+    console.log("OTP::::",otp);
+    let user = await User.findOneAndUpdate({_id:userId},{otp:otp});
+    user = await User.findOneAndUpdate({_id:userId},{telephone:telephone});
+    console.log(user);
+    res.status(201).json({message:"Message sent", user});
+  }
+  else
+  {
+    res.status(400).json({message:"Error", });
+  }
+});
+
+// User OTP
+app.post('/otp', async (req, res) => {
+  console.log("OTP");
+  console.log(req.body);
+  const {otp,userId} = req.body;
+  try {
+    let user = await User.findById(userId);
+    console.log(user.otp);
+    if(user.otp == otp){
+      console.log("OTP verified");
+      user = await User.findOneAndUpdate({_id:userId},{phone_active:true});
+      console.log(user);
+      res.json(user);
+    }else{
+      res.status(400).json({message:"Invalid OTP"});
+    }
+  } catch (error) {
+    res.status(error).json({ message: error });
   }
 });
 
@@ -78,7 +132,7 @@ app.post('/login', async (req, res) => {
     const response = await axios.post(`${SERVICES.account}/login`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -88,19 +142,20 @@ app.post('/recover', async (req, res) => {
     const response = await axios.post(`${SERVICES.account}/recover`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
 //2.Service Management Routes
 
 // Get list of telco services
-app.get('/services', async (req, res) => {
+app.get('/services/:id', async (req, res) => {
+  console.log("services:::",req.params.id);
   try {
-    const response = await axios.get(`${SERVICES.serviceManagement}/services`);
+    const response = await axios.get(`${SERVICES.serviceManagement}/services/${req.params.id}`);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -110,7 +165,7 @@ app.post('/activate-service', async (req, res) => {
     const response = await axios.post(`${SERVICES.serviceManagement}/activate-service`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -120,7 +175,7 @@ app.post('/deactivate-service', async (req, res) => {
     const response = await axios.post(`${SERVICES.serviceManagement}/deactivate-service`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -132,7 +187,7 @@ app.get('/bills/:userId', async (req, res) => {
     const response = await axios.get(`${SERVICES.billing}/bills/${userId}`);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -142,7 +197,7 @@ app.post('/pay-bill', async (req, res) => {
     const response = await axios.post(`${SERVICES.billing}/pay-bill`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -152,7 +207,7 @@ app.post('/notifications', async (req, res) => {
     const response = await axios.post(`${SERVICES.notification}/notifications`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
@@ -162,7 +217,7 @@ app.post('/chat', async (req, res) => {
     const response = await axios.post(`${SERVICES.chat}/chat`, req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(error.response.status).json({ message: error.response.data.message });
+    res.status(error).json({ message: error });
   }
 });
 
