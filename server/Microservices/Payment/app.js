@@ -54,6 +54,6 @@ app.post('/recover', (req, res) => {
   }
 });
 
-mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+mongoose.connect("mongodb+srv://chamath:henagona1@cluster0.ivkpws5.mongodb.net/sricare")
 .then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
 .catch((error)=>{console.log(error.message)})

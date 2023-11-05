@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const axios = require('axios');
 const app = express();
 const jwt = require('jsonwebtoken');
-const PORT = 3000;
+const PORT = 8080;
 
 app.use(express.json());
 
@@ -17,7 +20,17 @@ const SERVICES = {
   chat: 'http://localhost:3005', 
 };
 
+app.use(cookieParser());
+app.use(bodyParser.json({limit:'30mb',extended:true}));
+app.use(bodyParser.urlencoded({limit:'30mb',extended:true}));
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  };
 
+app.use(cors(corsOptions));
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -47,9 +60,11 @@ app.use(['/activate-service', '/deactivate-service', '/bills/:userId', '/pay-bil
 
 // User registration
 app.post('/register', async (req, res) => {
+  console.log("register");
+  console.log(req.body);
   try {
     const response = await axios.post(`${SERVICES.account}/register`, req.body);
-    res.json(response.data);
+    // res.json(response.data);
   } catch (error) {
     res.status(error.response.status).json({ message: error.response.data.message });
   }
@@ -57,6 +72,8 @@ app.post('/register', async (req, res) => {
 
 // User login
 app.post('/login', async (req, res) => {
+  console.log("login");
+  console.log(req.body);
   try {
     const response = await axios.post(`${SERVICES.account}/login`, req.body);
     res.json(response.data);
@@ -150,6 +167,6 @@ app.post('/chat', async (req, res) => {
 });
 
 
-mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+mongoose.connect("mongodb+srv://chamath:henagona1@cluster0.ivkpws5.mongodb.net/sricare")
 .then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
 .catch((error)=>{console.log(error.message)})

@@ -6,7 +6,7 @@ const PORT = 3003;
 
 app.use(bodyParser.json());
 
-const API_GATEWAY_URL = 'http://localhost:3000'; // API Gateway URL
+const API_GATEWAY_URL = 'http://localhost:8080'; // API Gateway URL
 
 
 const availableServices = [
@@ -93,6 +93,6 @@ app.post('/deactivate-service', (req, res) => {
   res.json({ message: 'Service deactivated successfully for the current month.' });
 });
 
-mongoose.connect("mongodb+srv://youtube_clone:henagona1@cluster0.ivkpws5.mongodb.net/SRI-TEL")
+mongoose.connect("mongodb+srv://chamath:henagona1@cluster0.ivkpws5.mongodb.net/sricare")
 .then(()=>app.listen(PORT, ()=>{console.log("API Gateway is running on port " + PORT)}))
 .catch((error)=>{console.log(error.message)})
