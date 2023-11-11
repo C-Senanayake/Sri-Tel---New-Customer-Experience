@@ -1,4 +1,6 @@
 # sri-care
+### Prerequisite
+   Need to have node, mongodb, IDE and npm or yarn
 ## To use the application, follow the outlined steps:
 1. Clone the repository
    ```console
