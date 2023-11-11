@@ -5,7 +5,7 @@
    git clone https://github.com/C-Senanayake/sri-care.git
    ```
 
-### Run client
+## Run client
 1. Goto client directory
    ```console
     cd client
@@ -29,7 +29,7 @@
    yarn start
    ```
 
-### Run server
+## Run server
 1. Goto server directory
    ```console
    cd server
